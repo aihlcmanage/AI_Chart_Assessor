@@ -1,0 +1,5 @@
+# node_modulesディレクトリ全体をGitの追跡対象から外す
+node_modules/
+
+# 補足: macOSの環境ファイルも追加しておくのが一般的です
+.DS_Store

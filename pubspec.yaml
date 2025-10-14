@@ -1,0 +1,33 @@
+name: ai_driven_chart_risk_assessor
+description: AI-Driven Chart Risk Assessor - 臨床的配慮度を評価するカルテ添削学習アプリ
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # API通信用
+  http: ^1.1.0
+  # 状態管理用
+  provider: ^6.0.5
+  # ユーザーID生成用
+  uuid: ^4.0.0
+  shared_preferences: ^2.2.3 # 最新バージョンを確認して設定してください
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  # UDフォント（または類似の読みやすいフォント）を使用する場合は、ここでアセットを定義します
+  # fonts:
+  #   - family: UDType
+  #     fonts:
+  #       - asset: fonts/UD_Type.ttf
