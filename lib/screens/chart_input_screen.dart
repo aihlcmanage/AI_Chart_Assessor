@@ -19,17 +19,21 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
   final TextEditingController _controller = TextEditingController();
   EvaluationResult? _evaluationResult;
   bool _isLoading = false;
+  
+  // 💡 追加情報提供のための新しい状態変数
+  String? _additionalInfo; // 追加情報（バイタルサイン等）を保持する変数
+  bool _isInfoLoading = false; // 追加情報ロード中のフラグ
+  
   // 評価モードを保持（課題のターゲットスキルに基づき設定）
   late final String _evaluationMode; 
 
   @override
   void initState() {
     super.initState();
-    // 初期入力として元のカルテ文章を設定 (originalChart -> originalText に修正)
+    // 初期入力として元のカルテ文章を設定
     _controller.text = widget.caseItem.originalText;
     
     // ターゲットスキルを評価モードとして設定
-    // "臨床的配慮度"をターゲットとする場合は 'clinical_sensitivity'、それ以外は 'accuracy'
     _evaluationMode = widget.caseItem.targetSkill.toLowerCase().contains('臨床的配慮度')
         ? 'clinical_sensitivity' 
         : 'accuracy'; 
@@ -77,7 +81,7 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
         // APIの引数として必須ではないが、もしAPI側で必要であれば渡す
         caseTitle: widget.caseItem.title,
         targetSkill: widget.caseItem.targetSkill,
-        originalText: widget.caseItem.originalText, // ここを originalText に修正
+        originalText: widget.caseItem.originalText,
       );
 
       setState(() {
@@ -91,6 +95,38 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
     } finally {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  // 💡 追加: ケースの追加情報（バイタルサイン、検査値など）を取得する
+  Future<void> _fetchAdditionalInfo() async {
+    final apiService = Provider.of<ApiService>(context, listen: false);
+
+    // 既に情報がロードされている場合は処理をスキップ（ボタンが非表示になるため、厳密には不要）
+    if (_additionalInfo != null || _isInfoLoading) {
+      return;
+    }
+
+    setState(() {
+      _isInfoLoading = true;
+    });
+
+    try {
+      // Next.jsの新しいAPIエンドポイントを呼び出す（ApiServiceに実装が必要）
+      final info = await apiService.fetchCaseAdditionalInfo(caseId: widget.caseItem.caseId);
+      
+      setState(() {
+        _additionalInfo = info;
+      });
+    } catch (e) {
+      debugPrint('追加情報取得エラー: $e');
+       ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('追加情報の取得中にエラーが発生しました。')),
+      );
+    } finally {
+      setState(() {
+        _isInfoLoading = false;
       });
     }
   }
@@ -140,7 +176,6 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
   Widget build(BuildContext context) {
     // テーマカラーの取得
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final accentColor = Theme.of(context).colorScheme.error; 
 
     return Scaffold(
       appBar: AppBar(
@@ -163,12 +198,55 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
                 border: Border.all(color: Colors.grey.shade300),
               ),
               child: SelectableText(
-                widget.caseItem.originalText, // ここを originalText に修正
+                widget.caseItem.originalText,
                 style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.black87),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 15),
+
+            // 💡 2. 追加情報提供ボタンと表示エリア
+            if (_additionalInfo == null)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _isInfoLoading ? null : _fetchAdditionalInfo,
+                  icon: _isInfoLoading
+                      ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                      : const Icon(Icons.info_outline, color: Colors.blue),
+                  label: Text(
+                    _isInfoLoading ? '情報取得中...' : 'バイタルサイン/検査値情報を提供する',
+                    style: const TextStyle(fontSize: 16, color: Colors.blue),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    side: const BorderSide(color: Colors.blue, width: 1.5),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+              )
+            else
+              Container(
+                padding: const EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.orange.shade200),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('📚 追加情報:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.deepOrange, fontSize: 15)),
+                    const SizedBox(height: 5),
+                    SelectableText(
+                      _additionalInfo!,
+                      style: const TextStyle(fontStyle: FontStyle.normal, color: Colors.black87, fontSize: 14, height: 1.4),
+                    ),
+                  ],
+                ),
+              ),
             
+            const SizedBox(height: 20),
+
             // 1.5. 課題に対するヒント
             Container(
               padding: const EdgeInsets.all(12.0),
@@ -191,7 +269,7 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 2. 修正入力エリア
+            // 3. 修正入力エリア
             const Text('修正後のカルテ（入力）:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             const SizedBox(height: 8),
             TextField(
@@ -206,11 +284,11 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
             ),
             const SizedBox(height: 10),
 
-            // 3. 入力支援（スニペット・選択肢モード）
+            // 4. 入力支援（スニペット・選択肢モード）
             _buildInputAssistance(),
             const SizedBox(height: 20),
 
-            // 4. 評価ボタン
+            // 5. 評価ボタン
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
@@ -230,7 +308,7 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
             ),
             const SizedBox(height: 30),
 
-            // 5. 評価結果表示エリア
+            // 6. 評価結果表示エリア
             if (_evaluationResult != null) ...[
               const Divider(),
               _buildEvaluationReport(_evaluationResult!), // 評価レポート表示関数
@@ -394,7 +472,6 @@ class _ChartInputScreenState extends State<ChartInputScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: suggestions.map((suggestion) {
         // 元のテキストに含まれていない場合はDiff表示が難しい可能性があるためスキップ
-        // ここも originalChart -> originalText に修正
         if (!widget.caseItem.originalText.contains(suggestion.originalText) && !_controller.text.contains(suggestion.originalText)) {
           return const SizedBox.shrink();
         }

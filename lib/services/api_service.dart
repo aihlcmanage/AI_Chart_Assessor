@@ -42,9 +42,6 @@ class ApiService extends ChangeNotifier {
     debugPrint('[DEBUG] CASE LIST API URL: $url');
 
     try {
-      // ★★★ 🚨 修正点: MOCKデータブロックを削除し、必ずAPIを叩くようにする 🚨 ★★★
-      // APIが正常に動作していることを確認するため、デバッグ用のMOCKデータを削除しました。
-      
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -109,6 +106,39 @@ class ApiService extends ChangeNotifier {
     } catch (e) {
       // ネットワーク/パースエラー時の詳細なデバッグ情報
       debugPrint('Network or Parsing Error: $e');
+      throw Exception('ネットワークエラーが発生しました: $e');
+    }
+  }
+
+  /// 💡 追加: ケースIDに基づいて追加情報（バイタルサインなど）を取得する
+  Future<String> fetchCaseAdditionalInfo({required String caseId}) async {
+    final url = Uri.parse('$_apiBaseUrl/api/caseinfo'); 
+    debugPrint('[DEBUG] CASE INFO API URL: $url');
+    
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode({'caseId': caseId});
+
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        // バックエンドが 'additionalInfo' というキーで情報全体を返すことを想定
+        final info = jsonResponse['additionalInfo'] as String? ?? '追加情報がありません。'; 
+        return info;
+      } else {
+        debugPrint('API Error Status (fetchCaseAdditionalInfo): ${response.statusCode}');
+        debugPrint('API Error Body (fetchCaseAdditionalInfo): ${response.body}');
+        throw Exception(
+          '追加情報のロードに失敗しました: ステータスコード ${response.statusCode}'
+        );
+      }
+    } catch (e) {
+      debugPrint('Network or Parsing Error (fetchCaseAdditionalInfo): $e');
       throw Exception('ネットワークエラーが発生しました: $e');
     }
   }

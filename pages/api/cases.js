@@ -1,14 +1,8 @@
-// pages/api/cases.js
 import { GoogleGenAI } from '@google/genai';
 
 // ★★★ 🚨 1. APIキーの初期化 🚨 ★★★
 // Next.jsの環境変数からAPIキーを取得
-// 環境変数 GEMINI_API_KEY に設定されていることを確認してください。
 const apiKey = process.env.GEMINI_API_KEY;
-if (!apiKey) {
-    console.error("GEMINI_API_KEY environment variable is not set.");
-    // APIキーがない場合は、後続のAI生成ロジックをスキップし、固定データを返す
-}
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 // 課題リストのテンプレートデータ (コア情報は固定)
@@ -18,7 +12,7 @@ const caseTemplates = [
         title: '緊急入院：急性心筋梗塞疑い',
         targetSkill: '正確性',
         coreInstruction: '70代男性の急性心筋梗塞疑いに関するカルテを作成します。時間軸、具体的な処置、医療用語の適切性に着目してください。',
-        hintInstruction: '時間軸、処置の具体性、病棟へ「上げた」という表現の適切性を見直しましょう。', // AIがアレンジするベース
+        hintInstruction: '時間軸、処置の具体性、病棟へ「上げた」という表現の適切性を見直しましょう。',
     },
     {
         caseId: 'case_002',
@@ -43,10 +37,14 @@ const caseTemplates = [
  */
 async function generateCaseVariation(template) {
     if (!ai) {
-        // APIキーがない場合はテンプレートのヒントのみを返す
+        // APIキーがない場合はフォールバックデータを使用
+        console.warn("API Key missing. Returning fallback data for case variation.");
         return {
             ...template,
-            originalText: template.coreInstruction, // デフォルトでコアインストラクションをoriginalTextとする
+            originalText: `【S】${template.coreInstruction.split('。')[0]}。${template.targetSkill}に問題があります。
+【O】バイタル、フィジカルは記載なし。
+【A】元の文章に不備が多い。
+【P】修正が必要。`, // SOAP形式のダミーデータ
             hintInstruction: template.hintInstruction,
         };
     }
@@ -90,6 +88,7 @@ async function generateCaseVariation(template) {
             }
         });
 
+        // JSON文字列をパース
         const generatedJson = JSON.parse(response.candidates[0].content.parts[0].text);
 
         return {
@@ -122,9 +121,12 @@ export default async function handler(req, res) {
 
     try {
         const generatedCasesPromises = caseTemplates.map(generateCaseVariation);
+        // すべての課題のバリエーション生成が完了するのを待つ
         const finalCases = await Promise.all(generatedCasesPromises);
 
         // CORSの問題を回避するため、適切なヘッダーを設定
+        // Next.jsが提供するデフォルトのCORS設定が利用できることが多いですが、
+        // 明示的に設定することで、Flutterからのアクセスを許可します。
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
