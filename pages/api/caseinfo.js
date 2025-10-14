@@ -1,11 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-// データベース（Neon DB/PostgreSQL）接続は、本プロジェクトのREADMEに基づき、
-// 将来的に利用されることを想定していますが、ここではダミーデータを使用します。
-// import { Pool } from 'pg'; 
+// pages/api/caseinfo.js
+
+//import { NextApiRequest, NextApiResponse } from 'next'; 
 
 // ダミーデータ: caseIdに対応する追加情報
 // 実際には、このデータはデータベース（例: Neon DBの専用テーブル）から取得されるべきです。
-const DUMMY_CASE_INFO: { [key: string]: string } = {
+const DUMMY_CASE_INFO = {
   'case_001': `【バイタルサイン】
 ・意識レベル: E4V5M6 (清明)
 ・血圧: 135/85 mmHg
@@ -54,10 +53,10 @@ const DUMMY_CASE_INFO: { [key: string]: string } = {
 
 /**
  * ケースIDに基づいて追加情報を提供するAPIハンドラ
- * @param {NextApiRequest} req 
- * @param {NextApiResponse} res 
+ * @param {object} req - NextApiRequest
+ * @param {object} res - NextApiResponse
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req, res) {
     
     // CORS対応 (OPTIONSリクエストの処理)
     if (req.method === 'OPTIONS') {
@@ -69,6 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ message: 'Method Not Allowed. Use POST.' });
     }
 
+    // req.bodyからcaseIdを取得
     const { caseId } = req.body;
 
     if (!caseId) {
