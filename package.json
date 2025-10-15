@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "echo 'Skipping next build to run custom Vercel command'",
     "start": "next start",
     "lint": "next lint"
   },
