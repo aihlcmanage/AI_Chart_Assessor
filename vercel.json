@@ -28,7 +28,7 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "/flutter/index.html",
+      "destination": "/flutter/", 
       "permanent": false
     }
   ]
