@@ -7,10 +7,6 @@
         "installCommand": "npm install && git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter doctor",
         "buildCommand": "/tmp/flutter/bin/flutter build web --web-renderer html --base-href /"
       }
-    },
-    {
-      "src": "pages/api/**/*", 
-      "use": "@vercel/node"
     }
   ],
   
@@ -26,6 +22,8 @@
       "dest": "/$1"
     }
   ],
+  "framework": "nextjs",
+  
   "build": {
     "env": {
       "FLUTTER_VERSION": "3.16.0", 
