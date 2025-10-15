@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build && git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter build web --web-renderer html --base-href / && mkdir -p dist/api && cp -r .next/server/pages/api/* dist/api/ && cp -r build/web/* dist/",
+    "build": "next build && mkdir -p dist/api && cp -r .next/server/pages/api/* dist/api/ && npm run build:flutter",
+    "build:flutter": "git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter build web --web-renderer html --base-href / && cp -r build/web/* dist/",
     "start": "next start",
     "lint": "next lint"
   },
