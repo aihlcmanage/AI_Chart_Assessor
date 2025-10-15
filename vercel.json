@@ -5,7 +5,7 @@
       "use": "@vercel/next",
       "config": {
         "installCommand": "npm install && git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter doctor",
-        "buildCommand": "/tmp/flutter/bin/flutter build web --web-renderer html --base-href / && rm -rf public && mkdir -p public && mv build/web public && next build"
+        "buildCommand": "/tmp/flutter/bin/flutter build web --web-renderer html --base-href / && cp -R build/web/. public/ && next build"
       }
     }
   ],
