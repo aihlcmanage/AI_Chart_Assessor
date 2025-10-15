@@ -24,6 +24,7 @@
         "source": "/flutter/:path*",
         "destination": "/public/flutter/:path*"
     },
+    
     {
         "source": "/",
         "destination": "/public/flutter/index.html"
