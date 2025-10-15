@@ -1,18 +1,18 @@
 {
   "builds": [
     {
-      "src": "**/*.dart",
-      "use": "@vercel/static-build",
+      "src": "package.json",
+      "use": "@vercel/node",
       "config": {
-        "buildCommand": "flutter build web --web-renderer html --release",
-        "outputDirectory": "build/web" 
+        "maxLambdaSize": "20mb",
+        "zeroConfig": true
       }
     }
   ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "destination": "/api"
     },
     {
       "source": "/(.*)",
