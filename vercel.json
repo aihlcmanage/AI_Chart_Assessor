@@ -21,8 +21,8 @@
       "destination": "/api/$1"
     },
     {
-        "source": "/flutter/(.*)",
-        "destination": "/public/flutter/$1"
+        "source": "/flutter/:path*",
+        "destination": "/public/flutter/:path*"
     },
     {
         "source": "/",
