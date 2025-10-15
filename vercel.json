@@ -1,19 +1,24 @@
 {
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next",
+      "config": {
+        "installCommand": "npm install",
+        "buildCommand": "flutter build web --web-renderer html --base-href /flutter/ && rm -rf public/flutter && mv build/web public/flutter && next build"
+      }
+    }
+  ],
   "build": {
     "env": {
-      "NODE_ENV": "production"
+      "FLUTTER_VERSION": "3.16.0", 
+      "FLUTTER_WEB_ENABLE_SUBDIRECTORY_NAVIGATION": "true" 
     }
   },
-  "crons": [
-  ],
   "rewrites": [
-  ],
-  "projects": [
     {
-      "root": ".",
-      "name": "ai_chart_assessor-api",
-      "command": "next build" 
+      "source": "/api/(.*)",
+      "destination": "/api"
     }
-  ],
-  "buildCommand": "next build"
+  ]
 }
