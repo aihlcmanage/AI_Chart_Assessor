@@ -29,8 +29,24 @@
       "destination": "/public/main.dart.js"
     },
     {
-      "source": "/:assetName",
-      "destination": "/public/:assetName"
+      "source": "/manifest.json",
+      "destination": "/public/manifest.json"
+    },
+    {
+      "source": "/favicon.png",
+      "destination": "/public/favicon.png"
+    },
+    {
+      "source": "/icons/(.*)",
+      "destination": "/public/icons/$1"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/public/assets/$1"
+    },
+    {
+      "source": "/:path((?!api/).*)", 
+      "destination": "/public/:path"
     }
   ]
 }
