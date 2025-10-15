@@ -4,8 +4,8 @@
       "src": "package.json",
       "use": "@vercel/next",
       "config": {
-        "installCommand": "npm install",
-        "buildCommand": "flutter build web --web-renderer html --base-href /flutter/ && rm -rf public/flutter && mv build/web public/flutter && next build"
+        "installCommand": "npm install && git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter doctor",
+        "buildCommand": "/tmp/flutter/bin/flutter build web --web-renderer html --base-href /flutter/ && rm -rf public/flutter && mv build/web public/flutter && next build"
       }
     }
   ],
@@ -18,7 +18,15 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": "/api/$1"
+    },
+    {
+        "source": "/flutter/(.*)",
+        "destination": "/public/flutter/$1"
+    },
+    {
+        "source": "/",
+        "destination": "/public/flutter/index.html"
     }
   ]
 }
