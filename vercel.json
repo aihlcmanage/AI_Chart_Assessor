@@ -6,17 +6,21 @@
       "config": {
         "installCommand": "npm install && git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter doctor",
 
-        "buildCommand": "npm run build && /tmp/flutter/bin/flutter build web --web-renderer html --base-href / && cp -r build/web/* .next/static/"
+        "buildCommand": "npm run build && /tmp/flutter/bin/flutter build web --web-renderer html --base-href / && mkdir dist && cp -r build/web/* dist/ && cp -r .next/server/pages/api dist/"
       }
     }
   ],
   
-  "outputDirectory": ".next/static", 
+  "outputDirectory": "dist", 
   
   "routes": [
     {
       "src": "/",
       "dest": "/index.html"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
