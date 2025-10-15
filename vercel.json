@@ -4,7 +4,7 @@
       "src": "package.json",
       "use": "@vercel/next",
       "config": {
-        "installCommand": "npm install && flutter pub get",
+        "installCommand": "npm install",
         "buildCommand": "flutter build web --web-renderer html --base-href /flutter/ && rm -rf public/flutter && mv build/web public/flutter && next build"
       }
     }
