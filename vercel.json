@@ -14,7 +14,34 @@
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
-    
+    {
+      "source": "/_next/static/(.*)",
+      "destination": "/_next/static/$1"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
+      "source": "/favicon.png",
+      "destination": "/favicon.png"
+    },
+    {
+      "source": "/manifest.json",
+      "destination": "/manifest.json"
+    },
+    {
+      "source": "/flutter_bootstrap.js",
+      "destination": "/flutter_bootstrap.js"
+    },
+    {
+      "source": "/main.dart.js",
+      "destination": "/main.dart.js"
+    },
+    {
+      "source": "/version.json",
+      "destination": "/version.json"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
