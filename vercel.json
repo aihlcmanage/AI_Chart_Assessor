@@ -13,6 +13,7 @@
       "use": "@vercel/node"
     }
   ],
+  
   "outputDirectory": "build/web", 
   
   "routes": [
