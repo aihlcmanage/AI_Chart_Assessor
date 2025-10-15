@@ -19,6 +19,18 @@
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
+    },
+    {
+      "source": "/flutter_bootstrap.js",
+      "destination": "/public/flutter_bootstrap.js"
+    },
+    {
+      "source": "/main.dart.js",
+      "destination": "/public/main.dart.js"
+    },
+    {
+      "source": "/:assetName",
+      "destination": "/public/:assetName"
     }
   ]
 }
