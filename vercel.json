@@ -23,11 +23,13 @@
     {
         "source": "/flutter/:path*",
         "destination": "/public/flutter/:path*"
-    },
-    
+    }
+  ],
+  "redirects": [
     {
-        "source": "/",
-        "destination": "/public/flutter/index.html"
+      "source": "/",
+      "destination": "/flutter/index.html",
+      "permanent": false
     }
   ]
 }
