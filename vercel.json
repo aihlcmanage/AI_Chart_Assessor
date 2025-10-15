@@ -6,7 +6,7 @@
       "config": {
         "installCommand": "npm install && git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter doctor",
 
-        "buildCommand": "/tmp/flutter/bin/flutter build web --web-renderer html --base-href /" 
+        "buildCommand": "npm run build && /tmp/flutter/bin/flutter build web --web-renderer html --base-href /" 
       }
     }
   ],
