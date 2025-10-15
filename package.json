@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:api && npm run build:flutter && npm run copy:static",
+    "build": "npm run build:api && npm run build:frontend && npm run copy:static",
     "build:api": "next build",
-    "build:flutter": "git clone -b 3.16.0 https://github.com/flutter/flutter.git /tmp/flutter && /tmp/flutter/bin/flutter precache && /tmp/flutter/bin/flutter build web --web-renderer html --base-href /",
+    "build:frontend": "npm install -g flutter --unsafe-perm && flutter precache --web && flutter build web --web-renderer html --base-href /",
     "copy:static": "mkdir -p public && cp -r build/web/* public/",
     "start": "next start",
     "lint": "next lint"
