@@ -1,18 +1,18 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/node",
+      "use": "@vercel/static-build",
       "config": {
-        "maxLambdaSize": "20mb",
-        "zeroConfig": true
+        "distDir": "public" 
       }
     }
   ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "destination": "/pages/api/$1"
     },
     {
       "source": "/(.*)",
