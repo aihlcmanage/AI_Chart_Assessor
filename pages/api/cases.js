@@ -3,6 +3,7 @@ import { GoogleGenAI } from '@google/genai';
 // ★★★ 🚨 1. APIキーの初期化 🚨 ★★★
 // Next.jsの環境変数からAPIキーを取得
 const apiKey = process.env.GEMINI_API_KEY;
+// The client initialization uses GoogleGenAI for structured output
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 // 課題リストのテンプレートデータ (コア情報は固定)
@@ -38,13 +39,11 @@ const caseTemplates = [
 async function generateCaseVariation(template) {
     if (!ai) {
         // APIキーがない場合はフォールバックデータを使用
-        console.warn("API Key missing. Returning fallback data for case variation.");
+        console.warn("API Key missing (GEMINI_API_KEY). Returning fallback data for case variation.");
+        // Fallback data must conform to the expected FinalCase structure
         return {
             ...template,
-            originalText: `【S】${template.coreInstruction.split('。')[0]}。${template.targetSkill}に問題があります。
-【O】バイタル、フィジカルは記載なし。
-【A】元の文章に不備が多い。
-【P】修正が必要。`, // SOAP形式のダミーデータ
+            originalText: `【S】${template.coreInstruction.split('。')[0]}。${template.targetSkill}に問題があります。\n【O】バイタル、フィジカルは記載なし。\n【A】元の文章に不備が多い。\n【P】修正が必要。`, // SOAP形式のダミーデータ
             hintInstruction: template.hintInstruction,
         };
     }
@@ -115,16 +114,16 @@ async function generateCaseVariation(template) {
  * @param {import('next').NextApiResponse} res 
  */
 export default async function handler(req, res) { 
+    // CORSヘッダーを先に設定し、OPTIONSリクエストを処理
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     if (req.method !== 'GET') {
-        // OPTIONSメソッドはCORS処理のために許可されますが、
-        // GET以外のリクエストは明示的にエラーとします。
-        // Next.jsやVercelの設定でOPTIONSを適切に処理すればここは不要ですが、念のため。
-        if (req.method === 'OPTIONS') {
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-            return res.status(200).end();
-        }
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
@@ -132,12 +131,6 @@ export default async function handler(req, res) {
         const generatedCasesPromises = caseTemplates.map(generateCaseVariation);
         // すべての課題のバリエーション生成が完了するのを待つ
         const finalCases = await Promise.all(generatedCasesPromises);
-
-        // CORSの問題を回避するため、適切なヘッダーを設定
-        // ★確認済みのCORSヘッダーを再度設定
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
         
         // JSON形式でAIが生成したデータを返す
         res.status(200).json(finalCases);

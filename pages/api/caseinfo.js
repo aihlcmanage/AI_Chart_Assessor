@@ -1,6 +1,6 @@
 // pages/api/caseinfo.js
 
-//import { NextApiRequest, NextApiResponse } from 'next'; 
+// Next.jsのAPIリクエスト/レスポンスの型はインポートせず使用します（JavaScriptファイルのため）
 
 // ダミーデータ: caseIdに対応する追加情報
 // 実際には、このデータはデータベース（例: Neon DBの専用テーブル）から取得されるべきです。
