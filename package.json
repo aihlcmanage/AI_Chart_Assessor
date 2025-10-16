@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "npm run build:api && npm run build:frontend && npm run copy:static",
     "build:api": "next build",
-    "build:frontend": "git clone https://github.com/flutter/flutter.git /tmp/flutter && (cd /tmp/flutter && git checkout 304a3721fcccbeb00b356a8cda3e6531978897bd) && /tmp/flutter/bin/flutter precache --web && /tmp/flutter/bin/flutter build web --base-href /",
+    "build:frontend": "git clone https://github.com/flutter/flutter.git /tmp/flutter && (cd /tmp/flutter && git checkout stable) && /tmp/flutter/bin/flutter precache --web && /tmp/flutter/bin/flutter build web --base-href /",
     "copy:static": "mkdir -p public && cp -r build/web/* public/",
     "start": "next start",
     "lint": "next lint"
