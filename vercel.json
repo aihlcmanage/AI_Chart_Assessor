@@ -1,6 +1,18 @@
 {
   "rewrites": [
     {
+      "source": "/api/cases",
+      "destination": "/api/cases"
+    },
+    {
+      "source": "/api/caseinfo",
+      "destination": "/api/caseinfo"
+    },
+    {
+      "source": "/api/evaluate",
+      "destination": "/api/evaluate"
+    },
+    {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
