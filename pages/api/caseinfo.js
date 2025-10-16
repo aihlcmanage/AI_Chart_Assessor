@@ -58,6 +58,12 @@ const DUMMY_CASE_INFO = {
  */
 export default async function handler(req, res) {
     
+    // ★★★ 修正箇所: CORSヘッダーを設定 ★★★
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    // ★★★ 修正箇所: ここまで ★★★
+
     // CORS対応 (OPTIONSリクエストの処理)
     if (req.method === 'OPTIONS') {
         res.status(200).end();

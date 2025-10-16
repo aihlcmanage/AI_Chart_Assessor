@@ -116,6 +116,15 @@ async function generateCaseVariation(template) {
  */
 export default async function handler(req, res) { 
     if (req.method !== 'GET') {
+        // OPTIONSメソッドはCORS処理のために許可されますが、
+        // GET以外のリクエストは明示的にエラーとします。
+        // Next.jsやVercelの設定でOPTIONSを適切に処理すればここは不要ですが、念のため。
+        if (req.method === 'OPTIONS') {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+            return res.status(200).end();
+        }
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
@@ -125,8 +134,7 @@ export default async function handler(req, res) {
         const finalCases = await Promise.all(generatedCasesPromises);
 
         // CORSの問題を回避するため、適切なヘッダーを設定
-        // Next.jsが提供するデフォルトのCORS設定が利用できることが多いですが、
-        // 明示的に設定することで、Flutterからのアクセスを許可します。
+        // ★確認済みのCORSヘッダーを再度設定
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

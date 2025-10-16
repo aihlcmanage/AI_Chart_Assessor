@@ -86,6 +86,11 @@ const EvaluationSchema = {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     
+    // CORSヘッダーを設定
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
     // CORS対応 (OPTIONSリクエストの処理)
     if (req.method === 'OPTIONS') {
         res.status(200).end();
@@ -194,6 +199,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         // データベースに評価結果を非同期でログに記録
         // NOT NULL制約違反を防ぐため、存在しない場合は 0 を設定
+        // ★★★ 修正点: 6軸評価のすべてのスコアを logEvaluation に渡すように更新 ★★★
         const scoresToLog = {
             total_score: evaluationResult.totalScore || 0,
             conciseness_score: evaluationResult.weaknessScores?.conciseness || 0,
