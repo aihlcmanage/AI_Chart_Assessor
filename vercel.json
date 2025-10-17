@@ -6,13 +6,13 @@
       "src": "package.json",
       "use": "@vercel/node"
     },
-
+    
     {
       "src": "package.json", 
       "use": "@vercel/static-build",
       "config": {
-        "buildCommand": "flutter build web --release",
-        "outputDirectory": "build/web"
+    
+        "buildCommand": "flutter build web --release && cp -r build/web/* ."
       }
     }
   ],
@@ -28,12 +28,6 @@
       "source": "/(.*\\..*)", 
       "destination": "/$1"
     },
-    
-    {
-      "source": "/assets/(.*)",
-      "destination": "/assets/$1"
-    },
-    
     
     {
       "source": "/(.*)",
