@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chart Assessor - Frontend</title>
+    <!-- Tailwind CSS (CDN経由で読み込み) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* カスタムフォントと基本スタイリング */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+            color: #1f2937;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md text-center">
+        <h1 class="text-3xl font-bold mb-4 text-indigo-700">AI Chart Assessor</h1>
+        <p class="text-gray-600 mb-6">フロントエンドの静的ファイルがVercelで正しく提供されています。</p>
+        
+        <div class="space-y-4">
+            <p class="text-sm font-semibold text-gray-500">API接続テスト</p>
+            <button id="testButton" 
+                    class="w-full py-3 px-4 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition duration-150 shadow-md">
+                /api/cases をテスト
+            </button>
+            <div id="apiStatus" class="mt-4 text-left p-3 rounded-lg bg-gray-100 text-sm overflow-auto max-h-40">
+                ステータス: 待機中...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = '/api/cases'; // Vercelの相対パスを使用
+        const apiStatus = document.getElementById('apiStatus');
+        const testButton = document.getElementById('testButton');
+
+        function updateStatus(message, isError = false) {
+            apiStatus.innerHTML = message;
+            apiStatus.className = `mt-4 text-left p-3 rounded-lg text-sm overflow-auto max-h-40 ${isError ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-700'}`;
+        }
+
+        testButton.addEventListener('click', async () => {
+            updateStatus('ステータス: 接続中...');
+            testButton.disabled = true;
+
+            try {
+                // Next.js API (output: 'standalone') へのリクエスト
+                const response = await fetch(API_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー! ステータス: ${response.status} (${response.statusText})`);
+                }
+
+                const data = await response.json();
+                
+                updateStatus(`
+                    <p class="font-bold text-green-700">✅ API応答成功:</p>
+                    <pre class="whitespace-pre-wrap">${JSON.stringify(data, null, 2)}</pre>
+                `);
+            } catch (error) {
+                updateStatus(`
+                    <p class="font-bold text-red-700">❌ API応答エラー:</p>
+                    <p>${error.message}</p>
+                    <p>CORS、ルーティング、またはAPI実装を確認してください。</p>
+                `, true);
+            } finally {
+                testButton.disabled = false;
+            }
+        });
+
+        // ページロード時の初期メッセージ
+        window.onload = () => {
+             updateStatus("APIテストボタンをクリックして、バックエンド (Next.js) との接続を確認してください。");
+        };
+
+    </script>
+</body>
+</html>
