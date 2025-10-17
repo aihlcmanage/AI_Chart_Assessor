@@ -7,7 +7,9 @@ export default function Home() {
       <h1 className="text-3xl font-bold text-blue-600 mb-4">
         AI Chart Assessor
       </h1>
-      <p className="text-gray-700">Welcome! The app is running successfully.</p>
+      <p className="text-gray-700">
+        Welcome! The app has been deployed successfully.
+      </p>
     </main>
   );
 }
