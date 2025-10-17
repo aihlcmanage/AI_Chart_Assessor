@@ -1,18 +1,18 @@
 {
   "version": 2,
   "builds": [
-    
+   
     {
       "src": "package.json",
       "use": "@vercel/node"
     },
-    
+
     {
       "src": "package.json", 
       "use": "@vercel/static-build",
       "config": {
-    
-        "buildCommand": "flutter build web --release && cp -r build/web/* ."
+        
+        "buildCommand": "flutter build web --release && cp -r build/web/assets . && cp build/web/index.html . && cp build/web/main.dart.js . && cp build/web/manifest.json ."
       }
     }
   ],
@@ -22,7 +22,6 @@
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
-    
     
     {
       "source": "/(.*\\..*)", 
