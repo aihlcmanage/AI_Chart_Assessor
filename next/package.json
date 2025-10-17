@@ -4,9 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    
     "prepare-flutter": "cd ../flutter && flutter build web --base-href /flutter/ --target=lib/main.dart && rm -rf ../next/public/flutter && mkdir -p ../next/public/flutter && cp -r build/web/* ../next/public/flutter/",
-    
     "start": "next start",
     "lint": "next lint"
   },
@@ -23,6 +21,9 @@
     "@types/pg": "8.11.6",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18",
     "typescript": "5.5.3"
   }
 }

@@ -15,7 +15,6 @@ const nextConfig = {
         ],
       },
       {
-        // Flutter配信用キャッシュヘッダ
         source: "/flutter/:path*",
         headers: [
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
@@ -24,7 +23,6 @@ const nextConfig = {
     ];
   },
 
-  // Flutter Webを public/flutter 配下で配信
   async rewrites() {
     return [
       {
