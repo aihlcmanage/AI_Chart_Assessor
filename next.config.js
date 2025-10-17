@@ -1,10 +1,27 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 環境変数 NEXT_PUBLIC_API_BASE_URL (例: http://localhost:3000)
-  // が、Flutter アプリの lib/services/case_api.dart に設定されていることを確認してください。
   
-  // CORS (Cross-Origin Resource Sharing) の設定
-  // Flutter Webアプリからのローカルアクセスを許可するために重要
+  // ----------------------------------------------------------------------
+  // ★ 1. 静的コンテンツの生成抑制 (Flutterホスティングのための最重要設定) ★
+  // Next.jsの全ページをサーバーレス関数として扱い、静的HTMLファイルの生成を無効化します。
+  // これにより、Next.jsがルートや404ページをビルドしなくなり、
+  // @vercel/static-build (Flutter) の成果物がVercelのルートとして優先されます。
+  output: 'standalone', 
+
+  // Next.jsにAPIルート（/pages/api/）以外のページを無視させるための設定
+  // 従来のpagesディレクトリのAPIファイルと共存させるため
+  pageExtensions: ['api.js', 'api.ts', 'api.jsx', 'api.tsx'],
+
+  // App Router (appDir) を使用しないことを明示
+  experimental: {
+    appDir: false, 
+  },
+  // ----------------------------------------------------------------------
+
+
+  // ----------------------------------------------------------------------
+  // ★ 2. CORS (Cross-Origin Resource Sharing) の設定 (API通信用) ★
+  // Flutter WebアプリからのAPIアクセスを許可するために重要です。
   async headers() {
     return [
       {
@@ -14,8 +31,8 @@ const nextConfig = {
           // 認証情報を含むリクエストを許可
           { key: "Access-Control-Allow-Credentials", value: "true" },
           
-          // ★ 重要な設定: 任意のオリジンからのリクエストを許可します。
-          // 開発環境では "*" が便利ですが、本番環境ではフロントエンドのURLに限定することを強く推奨します。
+          // 任意のオリジンからのリクエストを許可 (開発用)
+          // 本番環境では、フロントエンドのURLに限定することを強く推奨します。
           { key: "Access-Control-Allow-Origin", value: "*" }, 
           
           // 許可するHTTPメソッド
@@ -27,6 +44,7 @@ const nextConfig = {
       },
     ];
   },
+  // ----------------------------------------------------------------------
 };
 
 module.exports = nextConfig;
