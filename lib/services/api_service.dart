@@ -1,5 +1,3 @@
-// lib/services/api_service.dart
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -8,13 +6,41 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/case_model.dart';
 import '../models/evaluation_result.dart';
 
+// Web環境でグローバルJavaScript変数にアクセスするために必要
+import 'dart:js'; 
+
 // ---------------------------------------------------------------------------------
-// ★★★ 🚨 ここにあなたのNext.js APIのデプロイURLを設定してください 🚨 ★★★
-// 例: https://ai-chart-assessor.vercel.app
-const String _apiBaseUrl = 'https://ai-chart-assessor.vercel.app'; 
+// 💡 APIのベースURLを動的に取得するように変更
 // ---------------------------------------------------------------------------------
 
 class ApiService extends ChangeNotifier {
+  // コンストラクタで初期化される読み取り専用のベースURL
+  final String _apiBaseUrl; 
+
+  // コンストラクタでベースURLを初期化する
+  ApiService() : _apiBaseUrl = _getApiBaseUrl() {
+    debugPrint('API Base URL set to: $_apiBaseUrl');
+  }
+
+  // JavaScriptのグローバル変数からURLを取得するヘルパー関数
+  static String _getApiBaseUrl() {
+    // Web以外の環境（モバイル、デスクトップなど）では、固定URLを使用する
+    if (!kIsWeb) {
+      // 開発・テスト用の固定URLを設定（必要に応じて変更）
+      return 'https://ai-chart-assessor.vercel.app'; 
+    }
+
+    // Web環境の場合
+    // index.htmlで設定した window.API_BASE_URL の値を取得します
+    final url = context['API_BASE_URL'] as String?;
+    
+    if (url == null || url.isEmpty) {
+      // 取得できなかった場合は、現在のホストのオリジン（プロトコル+ドメイン）をフォールバックとして使用
+      return Uri.base.origin;
+    }
+    return url;
+  }
+  
   String? _userId;
   String? get userId => _userId;
 
@@ -38,6 +64,7 @@ class ApiService extends ChangeNotifier {
       throw Exception("User not initialized. Please call initializeUser() first.");
     }
 
+    // 💡 _apiBaseUrlが動的に設定された値を使用
     final url = Uri.parse('$_apiBaseUrl/api/cases?user_id=$_userId');
     debugPrint('[DEBUG] CASE LIST API URL: $url');
 
@@ -74,6 +101,7 @@ class ApiService extends ChangeNotifier {
       throw Exception("User not initialized. Cannot proceed with API call.");
     }
 
+    // 💡 _apiBaseUrlが動的に設定された値を使用
     final url = Uri.parse('$_apiBaseUrl/api/evaluate');
     debugPrint('[DEBUG] EVALUATE API URL: $url');
 
@@ -110,8 +138,9 @@ class ApiService extends ChangeNotifier {
     }
   }
 
-  /// 💡 追加: ケースIDに基づいて追加情報（バイタルサインなど）を取得する
+  /// ケースIDに基づいて追加情報（バイタルサインなど）を取得する
   Future<String> fetchCaseAdditionalInfo({required String caseId}) async {
+    // 💡 _apiBaseUrlが動的に設定された値を使用
     final url = Uri.parse('$_apiBaseUrl/api/caseinfo'); 
     debugPrint('[DEBUG] CASE INFO API URL: $url');
     

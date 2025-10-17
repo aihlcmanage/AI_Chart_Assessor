@@ -13,11 +13,14 @@ dependencies:
   
   # API通信用
   http: ^1.1.0
+  # 💡 Vercelの動的URLからベースURLを取得するために必要
+  js: ^0.6.7 
   # 状態管理用
   provider: ^6.0.5
   # ユーザーID生成用
   uuid: ^4.0.0
-  shared_preferences: ^2.2.3 # 最新バージョンを確認して設定してください
+  # 永続化ストレージ用
+  shared_preferences: ^2.2.3 
 
 dev_dependencies:
   flutter_test:
