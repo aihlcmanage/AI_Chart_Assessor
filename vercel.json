@@ -17,15 +17,16 @@
     }
   ],
   "rewrites": [
-   
+
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
-
+    
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+
+      "destination": "/build/web/$1" 
     }
   ],
   "headers": [
