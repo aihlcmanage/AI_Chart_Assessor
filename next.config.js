@@ -1,19 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   
-  // ルートパス (/) を public/index.html にリダイレクトするための設定
-  async redirects() {
-    return [
-      {
-        // リクエスト元パス (ルート)
-        source: '/',
-        // リダイレクト先 (publicフォルダ内のindex.html)
-        destination: '/index.html',
-        // 一時的なリダイレクト (302) を使用
-        permanent: false,
-      },
-    ];
-  },
+  // 1. ルートパス (/) で public/index.html を提供するために、
+  //    trailingSlash を true に設定します。
+  //    これにより、Next.jsのPagesルーターが存在しない場合に、
+  //    public/index.htmlがルート (/) として機能することが期待されます。
+  trailingSlash: true,
+  
+  // 2. ルートパスのリダイレクト設定は削除します（trailingSlashで代用）。
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/index.html',
+  //       permanent: false,
+  //     },
+  //   ];
+  // },
 
   // CORS設定（変更なし）
   async headers() {
