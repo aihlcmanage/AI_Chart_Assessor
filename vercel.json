@@ -1,55 +1,38 @@
 {
   "version": 2,
   "builds": [
+
     {
       "src": "package.json",
       "use": "@vercel/node",
       "config": {
+       
         "includeFiles": [
           "pages/api/**" 
         ]
       }
     },
+
     {
       "src": "build/web/**", 
       "use": "@vercel/static-build" 
     }
   ],
   "routes": [
+    
     {
       "src": "/api/(.*)",
       "dest": "/pages/api/$1" 
     },
+   
     {
       "src": "/(.*\\.(js|css|html|json|png|jpg|gif|svg|ico|ttf|otf|eot|woff|woff2))$",
       "dest": "/build/web/$1"
     },
+    
     {
       "src": "/(.*)",
       "dest": "/build/web/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET,POST,PUT,DELETE,OPTIONS"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type"
-        }
-      ]
     }
   ]
 }
