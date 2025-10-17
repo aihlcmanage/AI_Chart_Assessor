@@ -1,9 +1,12 @@
 {
   "version": 2,
-  
+  "env": {
+
+    "VERCEL_BUILD_ENABLE_FLUTTER": "1"
+  },
   
   "rewrites": [
-
+   
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
