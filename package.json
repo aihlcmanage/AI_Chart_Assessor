@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build:api": "next build",
-    "build": "npm run build:api",
+    "build": "next build", 
     "start": "next start",
     "lint": "next lint"
   },
