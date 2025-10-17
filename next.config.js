@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   
-  // 以前のデプロイの課題解決のため、
-  // output: 'standalone' および pageExtensions の設定を削除し、
-  // Vercelのルーティング設定 (vercel.json) に制御を委ねます。
-  // これにより、Next.jsの不必要な静的ページ生成が抑制されることを期待します。
+  // ルートパス (/) を public/index.html にリダイレクトするための設定
+  async redirects() {
+    return [
+      {
+        // リクエスト元パス (ルート)
+        source: '/',
+        // リダイレクト先 (publicフォルダ内のindex.html)
+        destination: '/index.html',
+        // 一時的なリダイレクト (302) を使用
+        permanent: false,
+      },
+    ];
+  },
 
   // CORS設定（変更なし）
   async headers() {
