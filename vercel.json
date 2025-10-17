@@ -20,30 +20,25 @@
       }
     }
   ],
-  
 
-  "routes": [
-    
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
+  "rewrites": [
 
     {
-      "src": "/(.*\\.(js|css|ico|png|jpg|gif|json|svg|woff|woff2|ttf|otf|eot|map|dart))",
-      "dest": "/$1"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     },
+
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "source": "/(.*\\..*)", 
+      "destination": "/$1"
     },
-    
+   
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
-  
+
   "headers": [
     {
       "source": "/(.*)",
