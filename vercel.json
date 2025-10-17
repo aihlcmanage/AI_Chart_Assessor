@@ -2,10 +2,10 @@
   "version": 2,
   "builds": [
     {
-      "src": "next.config.js",
+      "src": "package.json",
       "use": "@vercel/next",
       "config": {
-        "maxLambdaSize": "15mb"
+        "maxLambdaSize": "20mb"
       }
     },
     {
@@ -14,14 +14,17 @@
     }
   ],
   "routes": [
-    { 
-      "src": "/api/(.*)", 
-      "dest": "/api/$1" 
+
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
     },
-    { 
-      "src": "/_next/(.*)", 
-      "dest": "/_next/$1" 
+
+    {
+      "src": "/_next/(.*)",
+      "dest": "/_next/$1"
     },
+    
     {
       "src": "/(.*)",
       "dest": "/public/$1"
