@@ -5,10 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build:api": "next build",
-    
+    "build:api": "next build && rm -rf .next/static && rm -f .next/server/pages/404.html .next/server/pages/_error.js .next/server/pages/index.js",
     "build": "npm run build:api",
-    
     "start": "next start",
     "lint": "next lint"
   },
