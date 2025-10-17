@@ -10,14 +10,16 @@
         "buildCommand": "npm run build:api"
       }
     },
-   
+    
     {
       "src": "package.json", 
       "use": "@vercel/static-build",
       "config": {
-        
-        "buildCommand": "flutter build web --release && cp -r build/web/assets . && cp build/web/index.html . && cp build/web/main.dart.js . && cp build/web/manifest.json ."
-      }
+
+        "buildCommand": "flutter build web --release"
+      },
+      
+      "outputDirectory": "build/web" 
     }
   ],
   
