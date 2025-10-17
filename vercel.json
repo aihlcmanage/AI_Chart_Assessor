@@ -1,22 +1,31 @@
 {
   "version": 2,
-  "env": {
-
-    "VERCEL_BUILD_ENABLE_FLUTTER": "1"
-  },
+  
+  "builds": [
+    
+    {
+      "src": "pubspec.yaml", 
+      "use": "@vercel/static-build",
+      "config": {
+        
+        "buildCommand": "flutter build web --release && cp -r build/web/assets . && cp build/web/index.html . && cp build/web/main.dart.js . && cp build/web/manifest.json ."
+      }
+    }
+  
+  ],
   
   "rewrites": [
-   
+
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
-    
+
     {
       "source": "/(.*\\..*)", 
       "destination": "/$1"
     },
-    
+
     {
       "source": "/(.*)",
       "destination": "/index.html"

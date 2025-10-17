@@ -6,9 +6,8 @@
   "scripts": {
     "dev": "next dev",
     "build:api": "next build",
-    "build:flutter": "flutter build web --release",
-    "move:files": "cp -r build/web/assets . && cp build/web/index.html . && cp build/web/main.dart.js . && cp build/web/manifest.json .",
-    "build": "npm run build:api && npm run build:flutter && npm run move:files",
+    
+    "build": "npm run build:api",
     
     "start": "next start",
     "lint": "next lint"
