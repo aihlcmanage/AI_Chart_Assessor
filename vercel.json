@@ -6,7 +6,7 @@
       "src": "package.json",
       "use": "@vercel/node",
       "config": {
-       
+
         "includeFiles": [
           "pages/api/**" 
         ]
@@ -19,20 +19,20 @@
     }
   ],
   "routes": [
-    
+
     {
       "src": "/api/(.*)",
       "dest": "/pages/api/$1" 
     },
-   
+
     {
       "src": "/(.*\\.(js|css|html|json|png|jpg|gif|svg|ico|ttf|otf|eot|woff|woff2))$",
-      "dest": "/build/web/$1"
+      "dest": "/$1"
     },
-    
+
     {
       "src": "/(.*)",
-      "dest": "/build/web/index.html"
+      "dest": "/index.html"
     }
   ]
 }
