@@ -1,16 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   
-  // 1. Next.jsの全ページをサーバーレス関数として扱い、静的HTMLファイルの生成を無効化
-  // この設定を維持します。
-  output: 'standalone', 
+  // 以前のデプロイの課題解決のため、
+  // output: 'standalone' および pageExtensions の設定を削除し、
+  // Vercelのルーティング設定 (vercel.json) に制御を委ねます。
+  // これにより、Next.jsの不必要な静的ページ生成が抑制されることを期待します。
 
-  // 2. 認識するファイル拡張子を、API関連のものだけに限定します。
-  // これにより、Next.jsは /pages ディレクトリ内の他のファイルを無視し、
-  // /404 などのデフォルト静的ページ生成を停止すると期待されます。
-  pageExtensions: ['api.js', 'api.ts', 'api.jsx', 'api.tsx'],
-
-  // 3. CORS設定（変更なし）
+  // CORS設定（変更なし）
   async headers() {
     return [
       {

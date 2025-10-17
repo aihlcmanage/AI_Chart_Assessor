@@ -1,54 +1,30 @@
 {
   "version": 2,
-  
   "builds": [
-
     {
-      "src": "package.json",
-      "use": "@vercel/node",
+      "src": "next.config.js",
+      "use": "@vercel/next",
       "config": {
-        "buildCommand": "npm run build:api"
+        "maxLambdaSize": "15mb"
       }
     },
-
     {
-      "src": "package.json", 
-      "use": "@vercel/static-build",
-      "config": {
-
-        "buildCommand": "flutter build web --release; mkdir -p public; cp -r build/web/index.html public/index.html; cp -r build/web/assets public/assets; cp -r build/web/*.js public/; cp -r build/web/*.json public/"
-
-      }
+      "src": "public/**/*",
+      "use": "@vercel/static"
     }
   ],
-  
-  "rewrites": [
-
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+  "routes": [
+    { 
+      "src": "/api/(.*)", 
+      "dest": "/api/$1" 
     },
-
-    {
-      "source": "/(.*\\..*)", 
-      "destination": "/public/$1"
+    { 
+      "src": "/_next/(.*)", 
+      "dest": "/_next/$1" 
     },
-    
     {
-      "source": "/(.*)",
-      "destination": "/public/index.html"
-    }
-  ],
-
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "/public/$1"
     }
   ]
 }
