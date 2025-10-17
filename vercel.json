@@ -1,16 +1,32 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "pages/api/**" 
+        ]
+      }
     },
     {
-      "source": "/_next/static/(.*)",
-      "destination": "/_next/static/$1"
+      "src": "build/web/**", 
+      "use": "@vercel/static-build" 
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/pages/api/$1" 
     },
     {
-      "source": "/(.*)",
-      "destination": "/public/index.html"
+      "src": "/(.*\\.(js|css|html|json|png|jpg|gif|svg|ico|ttf|otf|eot|woff|woff2))$",
+      "dest": "/build/web/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/build/web/index.html"
     }
   ],
   "headers": [

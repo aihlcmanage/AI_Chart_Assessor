@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:api && npm run build:frontend && npm run copy:static",
+    "build": "npm run build:api && npm run build:frontend",
     "build:api": "next build",
-    "build:frontend": "git clone https://github.com/flutter/flutter.git /tmp/flutter && (cd /tmp/flutter && git checkout stable) && /tmp/flutter/bin/flutter precache --web && /tmp/flutter/bin/flutter build web --base-href /",
-    "copy:static": "mkdir -p public && cp -r build/web/* public/",
+    "build:frontend": "flutter build web --base-href /",
+    "copy:static": "echo 'copy:static is deprecated. Using vercel.json for routing.'",
     "start": "next start",
     "lint": "next lint"
   },
