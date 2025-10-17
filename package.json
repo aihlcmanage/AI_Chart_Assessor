@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:api",
     "build:api": "next build",
-    "build:frontend": "echo 'Flutter build is now handled by vercel.json builds section.'",
-    "copy:static": "echo 'copy:static is no longer necessary as Flutter is built and routed by Vercel.'",
+    "build:flutter": "flutter build web --release",
+    "move:files": "cp -r build/web/assets . && cp build/web/index.html . && cp build/web/main.dart.js . && cp build/web/manifest.json .",
+    "build": "npm run build:api && npm run build:flutter && npm run move:files",
+    
     "start": "next start",
     "lint": "next lint"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@google/genai": "^1.24.0",
     "next": "14.2.5",
