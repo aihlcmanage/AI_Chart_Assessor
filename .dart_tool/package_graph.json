@@ -9,6 +9,7 @@
       "dependencies": [
         "flutter",
         "http",
+        "js",
         "provider",
         "shared_preferences",
         "uuid"
@@ -73,6 +74,13 @@
         "collection",
         "flutter",
         "nested"
+      ]
+    },
+    {
+      "name": "js",
+      "version": "0.6.7",
+      "dependencies": [
+        "meta"
       ]
     },
     {
