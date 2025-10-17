@@ -1,23 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   
-  // 1. ルートパス (/) で public/index.html を提供するために、
-  //    trailingSlash を true に設定します。
-  //    これにより、Next.jsのPagesルーターが存在しない場合に、
-  //    public/index.htmlがルート (/) として機能することが期待されます。
-  trailingSlash: true,
+  // Vercelでの静的HTMLファイル (public/index.html) のルート表示は、
+  // next.config.js ではなく、プロジェクトルートの vercel.json で
+  // rewrites を使って設定するため、以下の設定は不要です。
+  // trailingSlash: true,
   
-  // 2. ルートパスのリダイレクト設定は削除します（trailingSlashで代用）。
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/',
-  //       destination: '/index.html',
-  //       permanent: false,
-  //     },
-  //   ];
-  // },
-
   // CORS設定（変更なし）
   async headers() {
     return [
