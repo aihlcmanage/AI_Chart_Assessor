@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:api && npm run build:frontend",
+    "build": "npm run build:api",
     "build:api": "next build",
-    "build:frontend": "flutter build web --base-href /",
-    "copy:static": "echo 'copy:static is deprecated. Using vercel.json for routing.'",
+    "build:frontend": "echo 'Flutter build is now handled by vercel.json builds section.'",
+    "copy:static": "echo 'copy:static is no longer necessary as Flutter is built and routed by Vercel.'",
     "start": "next start",
     "lint": "next lint"
   },
