@@ -16,11 +16,12 @@
       "use": "@vercel/static-build",
       "config": {
 
-        "buildCommand": "flutter build web --release; cp build/web/index.html index.html; cp build/web/main.dart.js main.dart.js; cp -r build/web/assets assets"
+        "buildCommand": "flutter build web --release; mkdir -p public; cp -r build/web/index.html public/index.html; cp -r build/web/assets public/assets; cp -r build/web/*.js public/; cp -r build/web/*.json public/"
+
       }
     }
   ],
-
+  
   "rewrites": [
 
     {
@@ -30,12 +31,12 @@
 
     {
       "source": "/(.*\\..*)", 
-      "destination": "/$1"
+      "destination": "/public/$1"
     },
-   
+    
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/public/index.html"
     }
   ],
 
