@@ -16,10 +16,9 @@
       "use": "@vercel/static-build",
       "config": {
 
-        "buildCommand": "flutter build web --release"
-      },
-      
-      "outputDirectory": "build/web" 
+        "buildCommand": "flutter build web --release && cp -r build/web/assets . && cp build/web/index.html . && cp build/web/main.dart.js . && cp build/web/manifest.json ."
+      }
+
     }
   ],
   
@@ -34,7 +33,7 @@
       "source": "/(.*\\..*)", 
       "destination": "/$1"
     },
-    
+   
     {
       "source": "/(.*)",
       "destination": "/index.html"
