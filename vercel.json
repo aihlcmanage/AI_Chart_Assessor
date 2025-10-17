@@ -15,7 +15,11 @@
 
     {
       "src": "build/web/**", 
-      "use": "@vercel/static-build" 
+      "use": "@vercel/static-build",
+      
+      "config": {
+        "outputDirectory": "build/web" 
+      }
     }
   ],
   "routes": [
@@ -24,15 +28,15 @@
       "src": "/api/(.*)",
       "dest": "/pages/api/$1" 
     },
-
+    
     {
       "src": "/(.*\\.(js|css|html|json|png|jpg|gif|svg|ico|ttf|otf|eot|woff|woff2))$",
-      "dest": "/$1"
+      "dest": "/build/web/$1"
     },
-
+    
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/build/web/index.html"
     }
   ]
 }
