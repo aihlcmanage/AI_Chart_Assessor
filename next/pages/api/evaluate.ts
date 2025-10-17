@@ -1,11 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI, Type } from '@google/genai';
-// 相対パス方式で database.ts をインポート
-import { logEvaluation } from '../../../services/database'; 
+import { logEvaluation, DBScores } from '../../../services/database';
 
-// ---------------------------------------------------------------------------------
-// 1. 環境設定と初期化
-// ---------------------------------------------------------------------------------
+// GEMINI_API_KEY 取得
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
@@ -14,87 +11,48 @@ if (!apiKey) {
 
 const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
-// 評価結果のJSONスキーマ定義
 const EvaluationSchema = {
     type: Type.OBJECT,
     properties: {
-        totalScore: { type: Type.INTEGER, description: '6軸評価の合計点（60点満点）。' },
+        totalScore: { type: Type.INTEGER },
         weaknessScores: {
             type: Type.OBJECT,
-            description: '各スキル軸のスコア（10点満点）。キーは英語名。',
             properties: {
-                conciseness: { type: Type.INTEGER, description: '簡潔性のスコア (1-10点)' },
-                accuracy: { type: Type.INTEGER, description: '正確性のスコア (1-10点)' },
-                clarity: { type: Type.INTEGER, description: '明瞭性のスコア (1-10点)' },
-                structure: { type: Type.INTEGER, description: '構成力のスコア (1-10点)' },
-                terminology: { type: Type.INTEGER, description: '用語の適切さのスコア (1-10点)' },
-                clinicalSensitivity: { type: Type.INTEGER, description: '臨床的配慮度のスコア (1-10点)' },
-            }, 
-            required: [
-                'conciseness',
-                'accuracy',
-                'clarity',
-                'structure',
-                'terminology',
-                'clinicalSensitivity'
-            ]
+                conciseness: { type: Type.INTEGER },
+                accuracy: { type: Type.INTEGER },
+                clarity: { type: Type.INTEGER },
+                structure: { type: Type.INTEGER },
+                terminology: { type: Type.INTEGER },
+                clinicalSensitivity: { type: Type.INTEGER },
+            },
+            required: ['conciseness','accuracy','clarity','structure','terminology','clinicalSensitivity']
         },
-        strengths: { type: Type.ARRAY, description: '評価で特に良かった点のリスト', items: { type: Type.STRING } },
-        improvementSuggestions: { type: Type.ARRAY, description: '改善点のリスト', items: { type: Type.STRING } },
-        gutReaction: { type: Type.STRING, description: '専門医の第一印象' },
-        misinterpretationRisk: { type: Type.STRING, description: '誤解リスク分析' },
-        impliedCompetence: { type: Type.STRING, description: '信頼度評価' },
-        finalGoodChart: { type: Type.STRING, description: '模範カルテ（SOAP形式）' },
-        snippetSuggestions: {
-            type: Type.ARRAY,
-            description: '修正を推奨する具体的スニペット',
-            items: {
-                type: Type.OBJECT,
-                properties: {
-                    originalText: { type: Type.STRING },
-                    replacementText: { type: Type.STRING }
-                },
-                required: ['originalText', 'replacementText']
-            }
+        strengths: { type: Type.ARRAY, items: { type: Type.STRING } },
+        improvementSuggestions: { type: Type.ARRAY, items: { type: Type.STRING } },
+        gutReaction: { type: Type.STRING },
+        misinterpretationRisk: { type: Type.STRING },
+        impliedCompetence: { type: Type.STRING },
+        finalGoodChart: { type: Type.STRING },
+        snippetSuggestions: { 
+            type: Type.ARRAY, 
+            items: { 
+                type: Type.OBJECT, 
+                properties: { originalText: { type: Type.STRING }, replacementText: { type: Type.STRING } }, 
+                required: ['originalText', 'replacementText'] 
+            } 
         }
     },
-    required: [
-        'totalScore', 
-        'weaknessScores', 
-        'strengths', 
-        'improvementSuggestions', 
-        'gutReaction',
-        'misinterpretationRisk',
-        'impliedCompetence',
-        'finalGoodChart',
-        'snippetSuggestions'
-    ]
+    required: ['totalScore','weaknessScores','strengths','improvementSuggestions','gutReaction','misinterpretationRisk','impliedCompetence','finalGoodChart','snippetSuggestions']
 };
 
-// ---------------------------------------------------------------------------------
-// 2. APIルートハンドラー
-// ---------------------------------------------------------------------------------
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-
-    // CORSヘッダーを設定
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
-    }
-
-    if (req.method !== 'POST') {
-        res.status(405).json({ message: 'Method Not Allowed' });
-        return;
-    }
-
-    if (!ai) {
-        res.status(503).json({ message: 'AI Engine Not Initialized. Missing GEMINI_API_KEY.' });
-        return;
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'POST') return res.status(405).json({ message: 'Method Not Allowed' });
+    if (!ai) return res.status(503).json({ message: 'AI Engine Not Initialized. Missing GEMINI_API_KEY.' });
 
     const { user_id, caseId, fullText, evaluationMode, caseTitle, targetSkill, originalText } = req.body;
 
@@ -103,7 +61,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        // プロンプト構築
         const modeDescription = evaluationMode === 'clinical_sensitivity'
             ? '特に「臨床的配慮度」と「誤解リスク」を重視。'
             : 'カルテの「正確性」と「構成力」を主軸に評価。';
@@ -148,15 +105,11 @@ ${scoreListForAI}
         });
 
         const jsonString = response.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!jsonString) {
-            console.error("AI response was empty or malformed:", response);
-            return res.status(500).json({ message: 'AI did not return valid JSON.' });
-        }
+        if (!jsonString) return res.status(500).json({ message: 'AI did not return valid JSON.' });
 
         const evaluationResult = JSON.parse(jsonString);
 
-        const scoresToLog = {
+        const scoresToLog: DBScores = {
             total_score: evaluationResult.totalScore || 0,
             conciseness_score: evaluationResult.weaknessScores?.conciseness || 0,
             accuracy_score: evaluationResult.weaknessScores?.accuracy || 0,
@@ -175,3 +128,4 @@ ${scoreListForAI}
         res.status(500).json({ message: 'Internal server error during evaluation.' });
     }
 }
+

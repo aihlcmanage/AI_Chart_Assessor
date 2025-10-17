@@ -1,0 +1,10 @@
+{
+  "/api/cases": "pages/api/cases.js",
+  "/api/supplemental_info": "pages/api/supplemental_info.js",
+  "/_error": "pages/_error.js",
+  "/api/evaluate": "pages/api/evaluate.js",
+  "/api/caseinfo": "pages/api/caseinfo.js",
+  "/": "pages/index.js",
+  "/_app": "pages/_app.js",
+  "/_document": "pages/_document.js"
+}
