@@ -2,6 +2,7 @@
   "version": 2,
   "builds": [
     {
+
       "src": "package.json",
       "use": "@vercel/next",
       "config": {
@@ -9,7 +10,8 @@
       }
     },
     {
-      "src": "public/**/*",
+ 
+      "src": "public/**/*", 
       "use": "@vercel/static"
     }
   ],
