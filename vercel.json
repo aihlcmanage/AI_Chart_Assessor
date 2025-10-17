@@ -1,15 +1,10 @@
 {
   "version": 2,
   "builds": [
-
+    
     {
       "src": "package.json",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "pages/api/**" 
-        ]
-      }
+      "use": "@vercel/node"
     },
 
     {
@@ -22,10 +17,12 @@
     }
   ],
   "rewrites": [
+   
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
     },
+
     {
       "source": "/(.*)",
       "destination": "/index.html"
