@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-   
+    
     {
       "src": "package.json",
       "use": "@vercel/node"
@@ -23,19 +23,21 @@
       "destination": "/api/$1"
     },
     
-    {
-      "source": "/",
-      "destination": "/index.html"
-    },
     
     {
       "source": "/(.*\\..*)", 
       "destination": "/$1"
     },
-
+    
     {
       "source": "/assets/(.*)",
       "destination": "/assets/$1"
+    },
+    
+    
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
