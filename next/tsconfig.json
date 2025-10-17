@@ -14,15 +14,19 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-
-    // ★重要: 絶対パスの設定
-    // @/services/database のようなインポートを services/database.ts にマッピング
     "baseUrl": ".",
     "paths": {
       "@/services/*": ["services/*"]
     }
   },
-  // Next.jsの環境ファイルと、全ての.ts, .tsxファイルを含める
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next/public/flutter/pages/api/caseinfo.js"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "next/public/flutter"
+  ]
 }
