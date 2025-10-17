@@ -2,16 +2,23 @@
   "version": 2,
   
   "builds": [
-    
+
     {
-      "src": "pubspec.yaml", 
+      "src": "package.json",
+      "use": "@vercel/node",
+      "config": {
+        "buildCommand": "npm run build:api"
+      }
+    },
+   
+    {
+      "src": "package.json", 
       "use": "@vercel/static-build",
       "config": {
         
         "buildCommand": "flutter build web --release && cp -r build/web/assets . && cp build/web/index.html . && cp build/web/main.dart.js . && cp build/web/manifest.json ."
       }
     }
-  
   ],
   
   "rewrites": [
@@ -25,12 +32,13 @@
       "source": "/(.*\\..*)", 
       "destination": "/$1"
     },
-
+    
     {
       "source": "/(.*)",
       "destination": "/index.html"
     }
   ],
+  
   "headers": [
     {
       "source": "/(.*)",
