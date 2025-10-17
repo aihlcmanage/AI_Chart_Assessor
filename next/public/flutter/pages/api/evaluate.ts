@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { GoogleGenAI, Type } from '@google/genai';
 // データベースサービスが 'services/database.ts' にあることを想定
-import { logEvaluation } from '../../services/database'; 
+import { logEvaluation } from '../../../../../services/database'; 
 
 // ---------------------------------------------------------------------------------
 // 1. 環境設定と初期化

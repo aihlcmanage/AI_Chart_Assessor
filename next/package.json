@@ -1,13 +1,20 @@
 {
   "name": "ai_chart_assessor-api",
   "version": "1.0.0",
+  "description": "Next.js API endpoint for chart risk assessment using Gemini.",
+  "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run build:api && npm run prepare-flutter",
-    "build:api": "next build",
-    "prepare-flutter": "cd ../AI_Chart_Assessor && flutter build web --base-href /flutter/ && rm -rf ../next/public/flutter && mkdir -p ../next/public/flutter && cp -r build/web/* ../next/public/flutter/",
-    "start": "next start"
+    "build": "next build",
+    "prepare-flutter": "cd .. && flutter build web --base-href /flutter/ && rm -rf next/public/flutter && mkdir -p next/public/flutter && cp -r build/web/* next/public/flutter/",
+
+    "start": "next start",
+
+    "lint": "next lint"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@google/genai": "^1.24.0",
     "next": "14.2.5",

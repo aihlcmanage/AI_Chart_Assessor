@@ -23,6 +23,6 @@
     }
   },
   // Next.jsの環境ファイルと、全ての.ts, .tsxファイルを含める
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/api/caseinfo.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next/public/flutter/pages/api/caseinfo.js"],
   "exclude": ["node_modules"]
 }
