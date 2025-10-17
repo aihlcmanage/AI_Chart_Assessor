@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "build": "npm run prepare-flutter && next build",
-    "start": "next start",
-    "prepare-flutter": "cd ../flutter_web && flutter build web --base-href /flutter/ && rm -rf ../next/public/flutter && mkdir -p ../next/public/flutter && cp -r build/web/* ../next/public/flutter/"
+    "build": "npm run build:api && npm run prepare-flutter",
+    "build:api": "next build",
+    "prepare-flutter": "cd ../AI_Chart_Assessor && flutter build web --base-href /flutter/ && rm -rf ../next/public/flutter && mkdir -p ../next/public/flutter && cp -r build/web/* ../next/public/flutter/",
+    "start": "next start"
   },
   "dependencies": {
     "@google/genai": "^1.24.0",
