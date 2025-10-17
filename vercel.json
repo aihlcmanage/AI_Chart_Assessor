@@ -1,9 +1,28 @@
 {
   "version": 2,
-  "rewrites": [
+  "builds": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
+      "src": "next.config.js",
+      "use": "@vercel/next",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
