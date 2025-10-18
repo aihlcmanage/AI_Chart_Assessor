@@ -1,26 +1,29 @@
 // services/database.ts
-
 /**
  * データベース接続および操作を管理するモジュール
  * - Vercel のビルド環境でも動作するよう dynamic import を採用
  * - DATABASE_URL が未設定の場合は安全にスキップ
  */
 
-let pool: any = null;
+import type { Pool } from "pg";
 
-// DB接続の初期化（dynamic importで解決）
-async function initDB() {
+let pool: Pool | null = null;
+
+/**
+ * DB接続の初期化（dynamic importで解決）
+ */
+async function initDB(): Promise<Pool | null> {
   if (pool) return pool;
 
   const connectionString = process.env.DATABASE_URL;
-
   if (!connectionString) {
     console.error("❌ DATABASE_URL environment variable is not set. Database functions will be skipped.");
     return null;
   }
 
   try {
-    const { Pool } = await import('pg');
+    const pgModule = await import("pg");
+    const { Pool } = pgModule;
     pool = new Pool({
       connectionString,
       ssl: { rejectUnauthorized: false },
