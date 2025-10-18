@@ -5,7 +5,7 @@
  * - Vercel のビルド環境でも動作するよう dynamic import を採用
  * - DATABASE_URL が未設定の場合は安全にスキップ
  */
-
+export {}; // ← これでモジュールとして認識されます
 let pool: any = null;
 
 /**
