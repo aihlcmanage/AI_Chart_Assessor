@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  output: 'standalone',
+  reactStrictMode: true,         // React の Strict Mode を有効
+  output: 'standalone',          // Vercel でのスタンドアロンビルド向け
 
+  // HTTP ヘッダーの設定
   async headers() {
     return [
       {
@@ -11,7 +12,10 @@ const nextConfig = {
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" },
           { key: "Access-Control-Allow-Methods", value: "GET,DELETE,PATCH,POST,PUT,OPTIONS" },
-          { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version" },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+          },
         ],
       },
       {
@@ -23,6 +27,7 @@ const nextConfig = {
     ];
   },
 
+  // パス書き換え（Flutter Web 配置用）
   async rewrites() {
     return [
       {
@@ -30,6 +35,11 @@ const nextConfig = {
         destination: '/flutter/:path*',
       },
     ];
+  },
+
+  // Optional: Node.js 環境での ES Modules 互換設定
+  experimental: {
+    esmExternals: 'loose',
   },
 };
 
